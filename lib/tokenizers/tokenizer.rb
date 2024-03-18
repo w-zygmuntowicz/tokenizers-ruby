@@ -18,8 +18,20 @@ module Tokenizers
       _encode_batch(input, is_pretokenized, add_special_tokens)
     end
 
-    def decode(ids, skip_special_tokens: true)
-      _decode(ids, skip_special_tokens)
+    def decode(ids, skip_special_tokens: true, clean_up_tokenization_spaces: true)
+      output = _decode(ids, skip_special_tokens)
+      return output unless clean_up_tokenization_spaces
+
+      output.gsub(" .", ".")
+            .gsub(" ?", "?")
+            .gsub(" !", "!")
+            .gsub(" ,", ",")
+            .gsub(" ' ", "'")
+            .gsub(" n't", "n't")
+            .gsub(" 'm", "'m")
+            .gsub(" 's", "'s")
+            .gsub(" 've", "'ve")
+            .gsub(" 're", "'re")
     end
 
     def decode_batch(sequences, skip_special_tokens: true)
